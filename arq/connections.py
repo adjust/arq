@@ -89,7 +89,6 @@ else:
 enqueued_jobs = 0
 
 
-
 class ArqRedis(BaseRedis):
     """
     Thin subclass of ``redis.asyncio.Redis`` which adds :func:`arq.connections.enqueue_job`.

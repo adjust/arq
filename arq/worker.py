@@ -81,7 +81,7 @@ def func(
 
     if isinstance(coroutine, str):
         name = name or coroutine
-        coroutine_: 'WorkerCoroutine' = import_string(coroutine)
+        coroutine_: WorkerCoroutine = import_string(coroutine)
     else:
         coroutine_ = coroutine
 
