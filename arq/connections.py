@@ -104,7 +104,7 @@ class ArqRedis(BaseRedis):
 
     def __init__(
         self,
-        pool_or_conn: Optional[ConnectionPool] = None,  # type: ignore[type-arg]
+        pool_or_conn: Optional[ConnectionPool] = None,
         job_serializer: Optional[Serializer] = None,
         job_deserializer: Optional[Deserializer] = None,
         default_queue_name: str = default_queue_name,
@@ -269,12 +269,12 @@ async def create_pool(
         def pool_factory(*args: Any, **kwargs: Any) -> ArqRedis:
             client = Sentinel(  # type: ignore[misc]
                 *args,
-                sentinels=settings.host,  # type: ignore[arg-type]
+                sentinels=settings.host,
                 ssl=settings.ssl,
                 **kwargs,
             )
             redis = client.master_for(settings.sentinel_master, redis_class=ArqRedis)
-            return cast(ArqRedis, redis)  # type: ignore[redundant-cast]
+            return cast(ArqRedis, redis)
 
     else:
         pool_factory = functools.partial(
