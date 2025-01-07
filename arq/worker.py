@@ -81,7 +81,7 @@ def func(
 
     if isinstance(coroutine, str):
         name = name or coroutine
-        coroutine_: 'WorkerCoroutine' = import_string(coroutine)
+        coroutine_: WorkerCoroutine = import_string(coroutine)
     else:
         coroutine_ = coroutine
 
@@ -187,7 +187,7 @@ class Worker:
         self,
         functions: Sequence[Union[Function, 'WorkerCoroutine']] = (),
         *,
-        distribution_index: int = None,
+        distribution_index: Optional[int] = None,
         queue_name: Optional[str] = default_queue_name,
         cron_jobs: Optional[Sequence[CronJob]] = None,
         redis_settings: Optional[RedisSettings] = None,

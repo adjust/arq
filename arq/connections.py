@@ -89,7 +89,6 @@ else:
 enqueued_jobs = 0
 
 
-
 class ArqRedis(BaseRedis):
     """
     Thin subclass of ``redis.asyncio.Redis`` which adds :func:`arq.connections.enqueue_job`.
@@ -130,7 +129,7 @@ class ArqRedis(BaseRedis):
         _defer_by: Union[None, int, float, timedelta] = None,
         _expires: Union[None, int, float, timedelta] = None,
         _job_try: Optional[int] = None,
-        distribution: str = None,  # example 5:2
+        distribution: Optional[str] = None,  # example 5:2
         **kwargs: Any,
     ) -> Optional[Job]:
         """
@@ -195,8 +194,8 @@ class ArqRedis(BaseRedis):
                 return None
         return Job(job_id, redis=self, _queue_name=_queue_name, _deserializer=self.job_deserializer)
 
-    def _get_queue_index(self, distribution) -> int:
-        ratios = list(map(lambda x: int(x), distribution.split(':')))
+    def _get_queue_index(self, distribution: Optional[str]) -> int:
+        ratios = list(map(lambda x: int(x), distribution.split(':')))  # type: ignore[union-attr]
         ratios_sum = sum(ratios)
         up_to_ratio = ratios[0]
         queue_index = 0
