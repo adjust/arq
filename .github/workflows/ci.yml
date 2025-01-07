@@ -8,8 +8,6 @@ on:
       - '*'
   pull_request: {}
 
-env:
-  PYPI_SSH_KEY: ${{ secrets.AUTOMATE_DEPLOY_SSH_KEY }}
 
 jobs:
   lint:
@@ -126,7 +124,16 @@ jobs:
       - name: build
         run: python -m build
 
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v2.7.0
+        with:
+          key: ${{ secrets.AUTOMATE_DEPLOY_SSH_KEY }}
+          known_hosts: |
+            automate-infra-1.adjust.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDW1dpQo0YbiBaM5bVagST5KN5HlCx0Zo6/tnNTYRQBX
+          config: |
+            Host *.adjust.com
+              User acquired
+
       - name: Upload wheel to PyPI
-        if: env.PYPI_SSH_KEY
         run: |
           scp dist/*.whl automate-infra-1.adjust.com:~/pypi/wheels
