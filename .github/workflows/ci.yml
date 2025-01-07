@@ -138,11 +138,7 @@ jobs:
       - name: build
         run: python -m build
 
-      - name: Upload package to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
-
-      - name: publish docs
-        if: '!fromJSON(steps.check-version.outputs.IS_PRERELEASE)'
-        run: make publish-docs
-        env:
-          NETLIFY: ${{ secrets.netlify_token }}
+      - name: Upload wheel to PyPI
+        if: env.PYPI_SSH_KEY
+        run: |
+          scp dist/*.whl automate-infra-1.adjust.com:~/pypi/wheels
