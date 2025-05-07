@@ -200,6 +200,7 @@ class Worker:
         self,
         functions: Sequence[Union[Function, 'WorkerCoroutine']] = (),
         *,
+        distribution_index: Optional[int] = None,
         queue_name: Optional[str] = default_queue_name,
         use_stream: bool = False,
         consumer_group_name: str = default_consumer_group,
@@ -241,6 +242,10 @@ class Worker:
                 queue_name = redis_pool.default_queue_name
             else:
                 raise ValueError('If queue_name is absent, redis_pool must be present.')
+
+        if distribution_index is not None:
+            queue_name = f'{queue_name}_{distribution_index}'
+
         self.queue_name = queue_name
         self.use_stream = use_stream
         self.consumer_group_name = consumer_group_name
