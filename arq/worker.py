@@ -65,9 +65,9 @@ class Function:
 
 @dataclass
 class JobMetaInfo:
-    message_id: str | None
     job_id: str
-    score: int | None
+    message_id: str | None = None
+    score: int | None = None
 
 
 def func(
@@ -234,8 +234,6 @@ class Worker:
         expires_extra_ms: int = expires_extra_ms,
         timezone: Optional[timezone] = None,
         log_results: bool = True,
-        max_consumer_inactivity: 'SecondsTimedelta' = 86400,
-        idle_consumer_poll_interval: 'SecondsTimedelta' = 60,
     ):
         self.functions: Dict[str, Union[Function, CronJob]] = {f.name: f for f in map(func, functions)}
         if queue_name is None:
@@ -271,8 +269,6 @@ class Worker:
         self.keep_result_forever = keep_result_forever
         self.poll_delay_s = to_seconds(poll_delay)
         self.stream_block_s = to_seconds(stream_block)
-        self.max_consumer_inactivity_s = to_seconds(max_consumer_inactivity)
-        self.idle_consumer_poll_interval_s = to_seconds(idle_consumer_poll_interval)
         self.queue_read_limit = queue_read_limit or max(max_jobs * 5, 100)
         self._queue_read_offset = 0
         self.max_tries = max_tries
@@ -519,7 +515,7 @@ class Worker:
                     self.queue_name, min=float('-inf'), start=self._queue_read_offset, num=count, max=now
                 )
 
-                jobs = [JobMetaInfo(message_id=None, job_id=_id.decode()) for _id in job_ids]
+                jobs = [JobMetaInfo(job_id=_id.decode()) for _id in job_ids]
                 await self.start_jobs(jobs)
 
         if self.allow_abort_jobs:
