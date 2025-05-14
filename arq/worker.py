@@ -414,7 +414,7 @@ class Worker:
         Get ids of pending jobs from the stream and start those jobs, remove
         any finished tasks from self.tasks.
         """
-        count = self.max_jobs
+        count = self.max_jobs - self.job_counter
         if self.burst and self.max_burst_jobs >= 0:
             burst_jobs_remaining = self.max_burst_jobs - self._jobs_started()
             if burst_jobs_remaining < 1:
