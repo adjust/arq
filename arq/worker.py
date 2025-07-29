@@ -387,11 +387,11 @@ class Worker:
         if self.on_startup:
             await self.on_startup(self.ctx)
 
-            if self.use_stream:
-                await self.create_consumer_group()
-                await self.run_stream_reader()
-            else:
-                await self._run_pool_iteration()
+        if self.use_stream:
+            await self.create_consumer_group()
+            await self.run_stream_reader()
+        else:
+            await self._run_pool_iteration()
 
     async def run_stream_reader(self) -> None:
         while True:
